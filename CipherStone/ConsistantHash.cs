@@ -1,8 +1,10 @@
-﻿namespace CipherStone
+﻿using System.Collections.Generic;
+
+namespace CipherStone
 {
     public static class consistantHash
     {
-        public static ulong ConsistantHash(string read)
+        public static ulong ConsistantHash(IEnumerable<char> read)
         {
             ulong hashedValue = 3074457345618258791ul;
             foreach (char t in read)

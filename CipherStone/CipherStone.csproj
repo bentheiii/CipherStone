@@ -50,9 +50,12 @@
   <ItemGroup>
     <Compile Include="Compress.cs" />
     <Compile Include="ConsistantHash.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="NumberSerialization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecureEncryption.cs" />
     <Compile Include="Serialize.cs" />
+    <Compile Include="Sha2Hashing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherStone", "CipherStone\CipherStone.csproj", "{ECCD89BD-8AE1-4073-9661-4BBFCBBD7613}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F17AF6CE-1CF3-4D98-9167-875E1962DE5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{ECCD89BD-8AE1-4073-9661-4BBFCBBD7613}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECCD89BD-8AE1-4073-9661-4BBFCBBD7613}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECCD89BD-8AE1-4073-9661-4BBFCBBD7613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F17AF6CE-1CF3-4D98-9167-875E1962DE5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17AF6CE-1CF3-4D98-9167-875E1962DE5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17AF6CE-1CF3-4D98-9167-875E1962DE5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17AF6CE-1CF3-4D98-9167-875E1962DE5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
