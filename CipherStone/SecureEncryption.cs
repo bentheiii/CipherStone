@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using WhetStone.Looping;
+using WhetStone.Random;
 
 namespace CipherStone
 {
@@ -11,12 +12,12 @@ namespace CipherStone
         64 bytes-hash of (key + everything after this)
         16 bits-iv of encryption
         the rest is encrypted serilized plaintext length (16 bytes, serialized in base-256, max input size is 2^64)+plaintext+padding
-        size overhead: 96 bytes
+        size overhead: 96 bytes + padding
         */
         public static byte[] Encrypt(byte[] plainText, byte[] key, int padding = 0, Func<byte> padGenerator = null)
         {
-            if (padGenerator != null && padding == 0)
-                throw new ArgumentException();
+            if (padGenerator == null && padding != 0)
+                padGenerator = GlobalRandomGenerator.ThreadLocal().Byte;
             if (key.Length != Encryption.KEY_LENGTH)
                 key = Encryption.GenValidKey(key);
             var padded = padding == 0 ? plainText : plainText.Concat(fill.Fill(padding, padGenerator)).ToArray();
