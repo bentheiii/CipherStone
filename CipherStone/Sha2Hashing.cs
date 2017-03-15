@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
-using WhetStone.Looping;
 
 namespace CipherStone
 {
@@ -12,8 +11,7 @@ namespace CipherStone
         {
             using (var alg = SHA512.Create())
             {
-                Stream s = new EnumerationStream(input);
-                alg.ComputeHash(s);
+                alg.ComputeHash(input.ToArray());
                 return alg.Hash;
             }
         }

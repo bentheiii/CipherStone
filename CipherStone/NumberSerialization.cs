@@ -44,7 +44,7 @@ namespace CipherStone
             {
                 if (closedList.Duplicates().Any() || !closedList.Any())
                     throw new ArgumentException("closed list must be unique and non-empty");
-                _closed = closedList.sort();
+                _closed = closedList.OrderBy().ToArray();
             }
             public BigInteger FromBytes(IEnumerable<byte> bytes)
             {
