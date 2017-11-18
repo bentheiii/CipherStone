@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WhetStone.Looping;
 using WhetStone.WordPlay;
@@ -21,7 +22,7 @@ namespace Tests
                 "what if we hadd spe\0cial esc\aape charact\bers?",
                 range.Range('\u0000','\uffff').ConvertToString()
             };
-            foreach (var v in strings.Join(@join.CartesianType.AllPairs).SelectMany(a=>a.Enumerate(10)))
+            foreach (var v in strings.Join().SelectMany(a=>a.Enumerate(10)))
             {
                 var plain = Encoding.Unicode.GetBytes(v.Item1);
                 var key = Encoding.Unicode.GetBytes(v.Item2);
