@@ -4,7 +4,7 @@ namespace CipherStone
 {
     public static class consistantHash
     {
-        public static ulong ConsistantHash(IEnumerable<char> read)
+        public static ulong ConsistantHash(this IEnumerable<char> read)
         {
             ulong hashedValue = 3074457345618258791ul;
             foreach (char t in read)

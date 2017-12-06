@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using CipherStone;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WhetStone.Looping;
@@ -11,11 +12,11 @@ namespace Tests
     [TestClass]
     public class LenSerialize
     {
-        [TestMethod] public void Simple()
+        [TestMethod] public void Simple_Len_Ser()
         {
             void Check<T>(T obj)
             {
-                var ser = new LengthSerializer<T>(getSerializer.GetSerializer<T>());
+                var ser = new LengthFormatter<T>(getFormatter.GetFormatter<T>());
                 var arr = ser.serialize(obj);
                 T des = ser.deserialize(arr);
                 if (obj is ValueType || obj is string)
@@ -60,10 +61,36 @@ namespace Tests
                 Check(i);
             }
             Check(ints);
-            var objs = new [] {new object(), new Dictionary<int,string>{[1]="one",[2]="two"}, 5, "14587", strings, ints};
+            var bytes = new byte[255];
+            Check(bytes);
+            var objs = new [] {new object(), new Dictionary<int,string>{[1]="one",[2]="two"}, 5, "14587", strings, ints, bytes};
             foreach (var o in objs)
             {
                 Check(o);
+            }
+        }
+        [TestMethod] public void Simple_Term_Big()
+        {
+            var ser = new TerminateIntegerFormatter(false);
+
+            void Check(BigInteger obj)
+            {
+                var arr = ser.serialize(obj);
+                var des = ser.deserialize(arr);
+
+                Assert.AreEqual(des, obj, obj.ToString());
+            }
+
+            foreach (var bi in range.Range(new BigInteger(67_000)))
+            {
+                Check(bi);
+            }
+
+            ser = new TerminateIntegerFormatter(true);
+
+            foreach (var bi in range.Range(new BigInteger(-67_000),new BigInteger(67_000)))
+            {
+                Check(bi);
             }
         }
     }

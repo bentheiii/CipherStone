@@ -5,10 +5,10 @@ using WhetStone.Random;
 
 namespace CipherStone
 {
-    public static class SecureEncryption
+    public static class SecureEncryptionV1
     {
         public const int ORIGINALSIZELENGTH = 16;
-        /*secure cypher scheme:
+        /*secure cypher scheme V1:
         64 bytes-hash of (key + everything after this)
         16 bits-iv of encryption
         the rest is encrypted serilized plaintext length (16 bytes, serialized in base-256, max input size is 256^16)+plaintext+padding
@@ -21,7 +21,7 @@ namespace CipherStone
             if (key.Length != Encryption.KEY_LENGTH)
                 key = Encryption.GenValidKey(key);
             var padded = padding == 0 ? plainText : plainText.Concat(fill.Fill(padding, padGenerator)).ToArray();
-            var orglength = new BigIntSerializer().serialize(plainText.Length).ToArray();
+            var orglength = new BigIntFormatter().serialize(plainText.Length).ToArray();
             if (orglength.Length > ORIGINALSIZELENGTH)
                 throw new ArgumentException("plaintext too long");
             orglength = orglength.Concat(fill.Fill(ORIGINALSIZELENGTH - orglength.Length, (byte)0)).ToArray(ORIGINALSIZELENGTH);
@@ -36,14 +36,15 @@ namespace CipherStone
                 throw new FormatException("Hash Mismatch");
             return ret;
         }
+        private const int HASH_LENGTH = 512 / 8;
         public static byte[] Decrypt(byte[] enc, byte[] key, out bool hashMatch)
         {
             if (key.Length != Encryption.KEY_LENGTH)
                 key = Encryption.GenValidKey(key);
-            hashMatch = enc.Take(Sha2Hashing.HASH_LENGTH).SequenceEqual(Sha2Hashing.Hash(key.Concat(enc.Skip(Sha2Hashing.HASH_LENGTH))));
-            var padded = Encryption.Decrypt(enc.Skip(Sha2Hashing.HASH_LENGTH + Encryption.IV_LENGTH).ToArray(), key,
-                enc.Skip(Sha2Hashing.HASH_LENGTH).Take(Encryption.IV_LENGTH).ToArray(Encryption.IV_LENGTH));
-            var orglen = (int)new BigIntSerializer().deserialize(padded.Take(ORIGINALSIZELENGTH).ToArray());
+            hashMatch = enc.Take(HASH_LENGTH).SequenceEqual(Sha2Hashing.Hash(key.Concat(enc.Skip(HASH_LENGTH))));
+            var padded = Encryption.Decrypt(enc.Skip(HASH_LENGTH + Encryption.IV_LENGTH).ToArray(), key,
+                enc.Skip(HASH_LENGTH).Take(Encryption.IV_LENGTH).ToArray(Encryption.IV_LENGTH));
+            var orglen = (int)new BigIntFormatter().deserialize(padded.Take(ORIGINALSIZELENGTH).ToArray());
             return padded.Skip(ORIGINALSIZELENGTH).Take(orglen).ToArray(orglen);
         }
     }

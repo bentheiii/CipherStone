@@ -16,7 +16,7 @@ namespace Tests
         {
             void Check<T>(params T[] a)
             {
-                var ser = getSerializer.GetSerializer<T[]>();
+                var ser = getFormatter.GetFormatter<T[]>();
                 var bytes = ser.serialize(a);
                 var des = ser.deserialize(bytes);
                 Assert.IsTrue(a.SequenceEqual(des));

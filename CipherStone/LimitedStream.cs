@@ -3,24 +3,29 @@ using System.IO;
 
 namespace CipherStone
 {
-    internal class LimitedStream : Stream
+    public class LimitedStream : Stream
     {
-        private readonly Stream _inner;
-        private int _bytesLeft;
-        private readonly int _allotedLength;
+        protected readonly Stream _inner;
+        protected readonly int _allotedLength;
+        private bool _expandCalled = false;
         public LimitedStream(Stream inner, int bytesLeft)
         {
             _inner = inner;
-            this._bytesLeft = bytesLeft;
-            this._allotedLength = _bytesLeft + (int)inner.Position;
+            this._allotedLength = bytesLeft + (int)inner.Position;
         }
+        private int bytesLeft => (int)(_allotedLength - Position);
         public override void Flush()
         {
             _inner.Flush();
         }
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotSupportedException();
+            if (origin == SeekOrigin.End)
+            {
+                offset = Length;
+                origin = SeekOrigin.Begin;
+            }
+            return _inner.Seek(offset, origin);
         }
         public override void SetLength(long value)
         {
@@ -28,11 +33,10 @@ namespace CipherStone
         }
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (_bytesLeft == 0)
+            if (bytesLeft == 0)
                 return 0;
-            if (count > _bytesLeft)
-                count = _bytesLeft;
-            _bytesLeft -= count;
+            if (count > bytesLeft)
+                count = bytesLeft;
             return _inner.Read(buffer, offset, count);
         }
         public override void Write(byte[] buffer, int offset, int count)
@@ -50,7 +54,7 @@ namespace CipherStone
         {
             get
             {
-                return false;
+                return _inner.CanSeek;
             }
         }
         public override bool CanWrite
@@ -75,15 +79,26 @@ namespace CipherStone
             }
             set
             {
-                throw new NotSupportedException();
+                Seek(value, SeekOrigin.Current);
             }
         }
         public override int ReadByte()
         {
-            if (_bytesLeft == 0)
+            if (bytesLeft == 0)
                 return -1;
-            _bytesLeft--;
-            return _inner.ReadByte();
+            var ret = _inner.ReadByte();
+            CheckForExpanded();
+            return ret;
         }
+        private void CheckForExpanded()
+        {
+            if (bytesLeft == 0 && _expandCalled)
+            {
+                onExpended();
+                _expandCalled = true;
+            }
+        }
+        protected virtual void onExpended()
+        {}
     }
 }

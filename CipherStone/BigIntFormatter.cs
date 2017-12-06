@@ -9,18 +9,18 @@ using WhetStone.WordPlay;
 
 namespace CipherStone
 {
-    public class BigIntSerializer : CastableSerializer, IByteSerializer<BigInteger>
+    public class BigIntFormatter : IFormatter<BigInteger>
     {
-        public BigInteger deserialize(Stream source)
+        public BigInteger Deserialize(Stream source)
         {
             return new BigInteger(source.ReadAll());
         }
-        public void serialize(BigInteger o, Stream sink)
+        public void Serialize(BigInteger o, Stream sink)
         {
             var arr = o.ToByteArray();
             sink.Write(arr, 0, arr.Length);
         }
-        public int serializeSize(BigInteger o)
+        public int SerializeSize(BigInteger o)
         {
             return -1;
         }

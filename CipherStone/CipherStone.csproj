@@ -34,6 +34,9 @@
     <Reference Include="BigRationalLibrary">
       <HintPath>..\..\BigRationalLibrary\bin\Debug\BigRationalLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -55,20 +58,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArraySerializer.cs" />
-    <Compile Include="Compress.cs" />
+    <Compile Include="ArrayFormatter.cs" />
+    <Compile Include="CharFormatter.cs" />
     <Compile Include="ConsistantHash.cs" />
+    <Compile Include="DictionaryFormatter.cs" />
+    <Compile Include="EncryptedFormatter.cs" />
     <Compile Include="Encryption.cs" />
-    <Compile Include="TupleSerializer.cs" />
-    <Compile Include="JsonSerializer.cs" />
-    <Compile Include="LengthSerializer.cs" />
+    <Compile Include="LimitedIntFormatter.cs" />
+    <Compile Include="PrefixSwitchFormatter.cs" />
+    <Compile Include="ReverseFormatter.cs" />
+    <Compile Include="SecureEncryptionV2.cs" />
+    <Compile Include="SecureEncryptionV3.cs" />
+    <Compile Include="SelectFormatter.cs" />
+    <Compile Include="SplitStream.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="TerminateByteFormatter.cs" />
+    <Compile Include="TerminateIntegerFormatter.cs" />
+    <Compile Include="TerminateStringFormatter.cs" />
+    <Compile Include="TupleFormatter.cs" />
+    <Compile Include="JsonFormatter.cs" />
+    <Compile Include="LengthFormatter.cs" />
     <Compile Include="LimitedStream.cs" />
-    <Compile Include="NumberSerialization.cs" />
+    <Compile Include="BigIntFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecureEncryption.cs" />
-    <Compile Include="Serialize.cs" />
-    <Compile Include="getSerializer.cs" />
+    <Compile Include="SecureEncryptionV1.cs" />
+    <Compile Include="Formatter.cs" />
+    <Compile Include="GetFormatter.cs" />
     <Compile Include="Sha2Hashing.cs" />
+    <Compile Include="TypePrefixSwitchFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
