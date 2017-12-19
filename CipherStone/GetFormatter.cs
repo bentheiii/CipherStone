@@ -10,6 +10,14 @@ namespace CipherStone
 {
     public static class getFormatter
     {
+        private static IEnumerable<ConstructorInfo> getConstructors(this Type @this, Type[] paramTypes)
+        {
+            return @this.GetConstructors().Where(a =>
+                a.GetParameters().Length >= paramTypes.Length &&
+                a.GetParameters().Zip(paramTypes).All(x => x.Item1.ParameterType.IsAssignableFrom(x.Item2)) &&
+                a.GetParameters().Skip(paramTypes.Length).All(x => x.HasDefaultValue)
+            ).OrderBy(a => a.GetParameters().Length);
+        }
         public enum DefaultFormatter { None, DotNet,
         #if JSON
             Json
@@ -33,9 +41,11 @@ namespace CipherStone
             IFormatter<T> ConType<NONGEN>(Type[] genArgs, object[] conArgs)
             {
                 var retType = typeof(NONGEN).GetGenericTypeDefinition().MakeGenericType(genArgs);
-                var con = retType.GetConstructor(conArgs.Select(a => a.GetType()).ToArray());
+                var con = retType.getConstructors(conArgs.Select(a => a.GetType()).ToArray()).FirstOrDefault();
                 if (con == null)
                     throw new Exception("constructor not found");
+                if (con.GetParameters().Length > conArgs.Length)
+                    conArgs = conArgs.Concat(Type.Missing.Enumerate(con.GetParameters().Length - conArgs.Length)).ToArray();
                 return (IFormatter<T>)con.Invoke(conArgs);
             }
 

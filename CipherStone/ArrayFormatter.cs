@@ -6,8 +6,9 @@ namespace CipherStone
     public class ArrayFormatter<T> : IFormatter<T[]>
     {
         private readonly IFormatter<T> _inner;
-        public ArrayFormatter(IFormatter<T> inner)
+        public ArrayFormatter(IFormatter<T> inner = null)
         {
+            inner = inner ?? getFormatter.GetFormatter<T>();
             _inner = inner.EnsureNonGreedy();
         }
         public T[] Deserialize(Stream source)
@@ -29,7 +30,10 @@ namespace CipherStone
         public int SerializeSize(T[] o)
         {
             var sizes = o.Select(_inner.SerializeSize);
-            var (anyNeg, sum) = sizes.Tally().TallyAny(a => a < 0, @break: true).TallyAggregate((a, b) => a + b,0).Do();
+            var (anyNeg, sum) = sizes.Tally()
+                .TallyAny(a => a < 0, @break: true)
+                .TallyAggregate((a, b) => a + b,0)
+                .Do();
             if (anyNeg)
                 return -1;
             return sum;

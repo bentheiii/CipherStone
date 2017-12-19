@@ -7,23 +7,58 @@ namespace CipherStone
     {
         private readonly IFormatter<T1> _inner1;
         private readonly IFormatter<T2> _inner2;
-        public TupleFormatter(IFormatter<T1> inner1 = null, IFormatter<T2> inner2 = null)
+        private readonly bool _rev;
+        public TupleFormatter(IFormatter<T1> inner1 = null, IFormatter<T2> inner2 = null, bool allowReverse = true, bool ensureNonGreedy = false)
         {
             inner1 = inner1 ?? getFormatter.GetFormatter<T1>();
             inner2 = inner2 ?? getFormatter.GetFormatter<T2>();
-            _inner1 = inner1.EnsureNonGreedy();
-            _inner2 = inner2.EnsureNonGreedy();
+            if (ensureNonGreedy)
+            {
+                _rev = false;
+                _inner1 = inner1.EnsureNonGreedy();
+                _inner2 = inner2.EnsureNonGreedy();
+            }
+            else if (allowReverse && inner1.isGreedyDeserialize && !inner2.isGreedyDeserialize)
+            {
+                _rev = true;
+                _inner1 = inner1;
+                _inner2 = inner2.EnsureNonGreedy();
+            }
+            else
+            {
+                _rev = false;
+                _inner1 = inner1.EnsureNonGreedy();
+                _inner2 = inner2;
+            }
         }
         public (T1, T2) Deserialize(Stream source)
         {
-            T1 t1 = _inner1.Deserialize(source);
-            T2 t2 = _inner2.Deserialize(source);
+            T1 t1;
+            T2 t2;
+            if (_rev)
+            {
+                t2 = _inner2.Deserialize(source);
+                t1 = _inner1.Deserialize(source);
+            }
+            else
+            {
+                t1 = _inner1.Deserialize(source);
+                t2 = _inner2.Deserialize(source);
+            }
             return (t1, t2);
         }
         public void Serialize((T1, T2) o, Stream sink)
         {
-            _inner1.Serialize(o.Item1, sink);
-            _inner2.Serialize(o.Item2, sink);
+            if (_rev)
+            {
+                _inner2.Serialize(o.Item2, sink);
+                _inner1.Serialize(o.Item1, sink);
+            }
+            else
+            {
+                _inner1.Serialize(o.Item1, sink);
+                _inner2.Serialize(o.Item2, sink);
+            }
         }
         public int SerializeSize((T1, T2) o)
         {
@@ -35,7 +70,7 @@ namespace CipherStone
                 return -1;
             return l1 + l2;
         }
-        public bool isGreedyDeserialize => false;
+        public bool isGreedyDeserialize => _rev ? _inner1.isGreedyDeserialize : _inner2.isGreedyDeserialize;
     }
     public class TupleFormatter<T1, T2, T3> : SelectFormatter<(T1, T2, T3), ((T1, T2), T3)>
     {

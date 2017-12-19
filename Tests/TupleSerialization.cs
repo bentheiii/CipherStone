@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Numerics;
 using CipherStone;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using WhetStone.Looping;
 
 namespace Tests
 {
@@ -50,6 +52,32 @@ namespace Tests
             Check4(1, 2, 3.0, "din");
             Check4("a", "bfdsd", -1, -0.1);
             Check4(Tuple.Create(125, 54), 58.5, 'a', long.MaxValue);
+        }
+        [TestMethod] public void Flipping_Tuple_Ser()
+        {
+            var greedy = new BigIntFormatter();
+            Assert.IsTrue(greedy.isGreedyDeserialize);
+            var nonGreedy = new TerminateIntegerFormatter(true);
+            Assert.IsFalse(nonGreedy.isGreedyDeserialize);
+
+            var lim = (BigInteger)30_000;
+
+            void TestTupleForm(IFormatter<BigInteger> f, IFormatter<BigInteger> s)
+            {
+                var form = new TupleFormatter<BigInteger, BigInteger>(f,s);
+                foreach (var b in range.Range(-lim,lim))
+                {
+                    var bytes = form.serialize((b + 1, b - 1));
+                    var (o, u) = form.deserialize(bytes);
+                    Assert.AreEqual(o,b+1);
+                    Assert.AreEqual(u,b-1);
+                }
+            }
+
+            TestTupleForm(greedy, nonGreedy);
+            TestTupleForm(nonGreedy, greedy);
+            TestTupleForm(nonGreedy, nonGreedy);
+            TestTupleForm(greedy, greedy);
         }
     }
 }

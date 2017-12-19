@@ -68,9 +68,9 @@ namespace CipherStone
         public bool isGreedyDeserialize => false;
         public BigInteger Deserialize(Stream source)
         {
-            return deserialize(source, true);
+            return deserialize(source, addSign);
         }
-        private BigInteger deserialize(Stream source, bool checkzero)
+        private static BigInteger deserialize(Stream source, bool checkzero)
         {
             var ret = BigInteger.Zero;
             var coff = BigInteger.One;
@@ -84,7 +84,7 @@ namespace CipherStone
                 coff *= 255;
             }
 
-            if (checkzero && ret.IsZero && addSign)
+            if (checkzero && ret.IsZero)
             {
                 return -deserialize(source, false);
             }

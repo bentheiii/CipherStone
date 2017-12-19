@@ -86,6 +86,7 @@
     <Compile Include="GetFormatter.cs" />
     <Compile Include="Sha2Hashing.cs" />
     <Compile Include="TypePrefixSwitchFormatter.cs" />
+    <Compile Include="VarSizeIntFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

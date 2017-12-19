@@ -10,7 +10,7 @@ namespace CipherStone
     public static class SecureEncryptionV3
     {
         /*
-        The V3 has no secure hashing or padding but allows to directly transition between streams.
+        The V3 has no secure hashing or length formatting but allows to directly transition between streams.
         format:
         1 byte- option byte flag and preamble
         16 bits- iv of encryption
@@ -27,11 +27,11 @@ namespace CipherStone
         hashing= +8 bytes
 
         flag byte:
-        the first six bits are ALWAYS 101001
+        the first six bits are ALWAYS 110001
         7th bit: whether hashing is enabled
         */
         [Flags]
-        public enum EncryptionOptions { Preamble = (byte)0b101001_00, Hashing = (byte)0b101001_10 }
+        public enum EncryptionOptions { Preamble = (byte)0b110001_00, Hashing = (byte)0b110001_10 }
         public static CryptoStream EncryptStream(Stream sink, byte[] key, EncryptionOptions options = EncryptionOptions.Preamble, int paddingSize = 0)
         {
             if (key.Length != Encryption.KEY_LENGTH)
@@ -40,13 +40,11 @@ namespace CipherStone
             var encSink = Encryption.EncryptStream(sink, key, out byte[] iv, PaddingMode.PKCS7);
             sink.Write(iv);
 
-
             if (paddingSize > 0)
             {
                 using (RandomNumberGenerator gen = new RNGCryptoServiceProvider())
                 {
                     var pads = new byte[paddingSize];
-                    //pads.Fill((byte)1);
                     gen.GetNonZeroBytes(pads);
                     encSink.Write(pads);
                 }

@@ -5,27 +5,17 @@ namespace CipherStone
 {
     public static class ensureNonGreedy
     {
-        public static IFormatter<T> EnsureNonGreedy<T>(this IFormatter<T> @this)
+        public static IFormatter<T> EnsureNonGreedy<T>(this IFormatter<T> @this, bool force = false)
         {
-            if (@this.isGreedyDeserialize)
+            if (@this.isGreedyDeserialize || force)
                 return new LengthFormatter<T>(@this);
             return @this;
         }
-        public static IFormatter<T> EnsureNonGreedy<T>(this IFormatter<T> @this, int maxSizebytes)
+        public static IFormatter<T> EnsureNonGreedy<T>(this IFormatter<T> @this, int maxSizebytes, bool force = false)
         {
-            if (!@this.isGreedyDeserialize)
+            if (!@this.isGreedyDeserialize && !force)
                 return @this;
-            IFormatter<BigInteger> lenFormatter;
-            if (maxSizebytes > sizeof(ulong))
-                lenFormatter = new TerminateIntegerFormatter();
-            else if (maxSizebytes > sizeof(uint))
-                lenFormatter = new ULongFormatter().ToBigIntFormatter();
-            else if (maxSizebytes > sizeof(ushort))
-                lenFormatter = new UIntFormatter().ToBigIntFormatter();
-            else if (maxSizebytes > sizeof(byte))
-                lenFormatter = new UShortFormatter().ToBigIntFormatter();
-            else
-                lenFormatter = new ByteFormatter().ToBigIntFormatter();
+            IFormatter<BigInteger> lenFormatter = new VarSizeIntFormatter(maxSizebytes);
 
             return new LengthFormatter<T>(@this, lenFormatter);
         }

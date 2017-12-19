@@ -14,10 +14,10 @@ namespace CipherStone
     {}
     public interface IFormatter<T> : IGenericFormatter
     {
+        bool isGreedyDeserialize { get; }
         T Deserialize(Stream source);
         void Serialize(T o, Stream sink);
         int SerializeSize(T o);//-1 means extracting the size is the same as just deserializing the object
-        bool isGreedyDeserialize { get; }
     }
     public static class GenericFormatterExtentions
     {
@@ -357,28 +357,6 @@ namespace CipherStone
         public int SerializeSize(string o)
         {
             return encoder.GetByteCount(o);
-        }
-        public bool isGreedyDeserialize => true;
-    }
-    public class CompressedFormatter<T> : IFormatter<T>
-    {
-        private readonly IFormatter<T> _inner;
-        public CompressedFormatter(IFormatter<T> inner)
-        {
-            _inner = inner;
-        }
-        public T Deserialize(Stream source)
-        {
-            return _inner.deserialize(source.ReadAll().Compress());
-        }
-        public void Serialize(T o, Stream sink)
-        {
-            var arr = _inner.serialize(o).Decompress();
-            sink.Write(arr,0,arr.Length);
-        }
-        public int SerializeSize(T o)
-        {
-            return -1;
         }
         public bool isGreedyDeserialize => true;
     }

@@ -72,6 +72,7 @@
     <Compile Include="TerminationString.cs" />
     <Compile Include="TupleSerialization.cs" />
     <Compile Include="TypeSwitch.cs" />
+    <Compile Include="VarSizeFormatting.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CipherStone\CipherStone.csproj">
