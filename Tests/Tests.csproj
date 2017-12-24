@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="ArraySerialization.cs" />
     <Compile Include="DictionarySerialization.cs" />
+    <Compile Include="EscapeFormatterTest.cs" />
     <Compile Include="JSonFormatter.cs" />
     <Compile Include="LenSerialize.cs" />
     <Compile Include="SecureEncryption.cs" />

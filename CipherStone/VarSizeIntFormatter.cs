@@ -9,7 +9,7 @@ namespace CipherStone
     public class VarSizeIntFormatter : BufferedConstSizeFormatter<BigInteger>
     {
         public bool allowNegative { get; }
-        public VarSizeIntFormatter(int byteCount, bool allowNegative = true) : base(byteCount)
+        public VarSizeIntFormatter(int byteCount, bool allowNegative) : base(byteCount)
         {
             this.allowNegative = allowNegative;
         }

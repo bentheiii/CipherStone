@@ -31,7 +31,7 @@ namespace CipherStone
         7th bit: whether hashing is enabled
         */
         [Flags]
-        public enum EncryptionOptions { Preamble = (byte)0b110001_00, Hashing = (byte)0b110001_10 }
+        public enum EncryptionOptions { Preamble = 0b110001_00, Hashing = 0b110001_10 }
         public static CryptoStream EncryptStream(Stream sink, byte[] key, EncryptionOptions options = EncryptionOptions.Preamble, int paddingSize = 0)
         {
             if (key.Length != Encryption.KEY_LENGTH)

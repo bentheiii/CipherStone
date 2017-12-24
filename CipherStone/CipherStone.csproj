@@ -64,6 +64,8 @@
     <Compile Include="DictionaryFormatter.cs" />
     <Compile Include="EncryptedFormatter.cs" />
     <Compile Include="Encryption.cs" />
+    <Compile Include="EnsureNonGreedy.cs" />
+    <Compile Include="EscapingFormatter.cs" />
     <Compile Include="LimitedIntFormatter.cs" />
     <Compile Include="PrefixSwitchFormatter.cs" />
     <Compile Include="ReverseFormatter.cs" />
@@ -78,7 +80,6 @@
     <Compile Include="TupleFormatter.cs" />
     <Compile Include="JsonFormatter.cs" />
     <Compile Include="LengthFormatter.cs" />
-    <Compile Include="LimitedStream.cs" />
     <Compile Include="BigIntFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecureEncryptionV1.cs" />

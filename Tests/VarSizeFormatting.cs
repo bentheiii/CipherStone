@@ -13,7 +13,7 @@ namespace Tests
         {
             void check(int size, int max)
             {
-                IFormatter<BigInteger> form = new VarSizeIntFormatter(size);
+                IFormatter<BigInteger> form = new VarSizeIntFormatter(size, true);
                 foreach (var x in range.IRange(-max,max).Select(a=>new BigInteger(a)))
                 {
                     var bytes = form.serialize(x);
@@ -35,7 +35,7 @@ namespace Tests
             check(1, 125);
             check(2, 32_000);
             check(3, 800_000);
-            //check(4, int.MaxValue);
+            check(4, 800_000);
         }
     }
 }
